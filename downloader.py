@@ -136,19 +136,7 @@ def main(eTextUrl):
             bookmarkInfo = json.loads(bookmarkInfoRequest.read().decode('utf-8'))
             bookmarkInfo = bookmarkInfo[0]['basketsInfoTOList'][0]
 
-        def recursiveSetBookmarks(aDict, parent=None):
-            for bookmark in aDict:
-                # These are the main bookmarks under this parent (or the whole document if parent is None)
-                bookmarkName = bookmark['n'] # Name of the section
-                pageNum = str(bookmark['lv']['content']) # First page (in the pdf's format)
-
-                latestBookmark = fileMerger.addBookmark(bookmarkName, pdfPageTable[pageNum], parent)
-
-                if 'be' in bookmark:
-                    recursiveSetBookmarks(bookmark['be'], latestBookmark)
-        print("Adding bookmarks...")
         fileMerger.addBookmark("Cover", 0) # Add a bookmark to the cover at the beginning
-        recursiveSetBookmarks(bookmarkInfo['document'][0]['bc']['b']['be'])
         print("Fixing metadata...")
         # Hack to fix metadata and page numbers:
         pdfPageLabelTable = [(v,k) for k,v in pdfPageTable.items()]
